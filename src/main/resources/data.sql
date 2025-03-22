@@ -1,0 +1,2 @@
+insert into projects (name, description) values ('Gerenciador de projetos', 'App para gerenciar projetos');
+insert into projects (name, description) values ('Testador de site de compras', 'Testar site de compras');
