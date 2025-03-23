@@ -6,8 +6,6 @@ import com.projectsManager.app.interfaces.SprintsRepositoryInterface;
 import com.projectsManager.app.interfaces.SprintsServiceInterface;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class SprintsService implements SprintsServiceInterface {
     private final SprintsRepositoryInterface sprintsRepository;
@@ -18,6 +16,11 @@ public class SprintsService implements SprintsServiceInterface {
 
     @Override
     public void update(Sprint sprint) throws SprintNotFoundException {
-        this.sprintsRepository.update(sprint);
+        sprintsRepository.update(sprint);
+    }
+
+    @Override
+    public Sprint getById(Long id) throws SprintNotFoundException {
+        return sprintsRepository.getById(id);
     }
 }

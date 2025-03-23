@@ -1,7 +1,6 @@
 package com.projectsManager.app.infra;
 
 import com.projectsManager.app.responses.DefaultErrorResponse;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -32,12 +31,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<DefaultErrorResponse> unknownRouteHandler(Exception exception) {
+    public ResponseEntity<DefaultErrorResponse> unknownRouteHandler(Exception ignored) {
         return ResponseEntity.status(404).body(new DefaultErrorResponse("Essa rota não existe."));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<DefaultErrorResponse> unknownMethodHandler(Exception exception) {
+    public ResponseEntity<DefaultErrorResponse> unknownMethodHandler(Exception ignored) {
         return ResponseEntity.status(404).body(new DefaultErrorResponse("Esse metodo não existe."));
     }
 

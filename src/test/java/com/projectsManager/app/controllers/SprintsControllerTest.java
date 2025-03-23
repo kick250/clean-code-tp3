@@ -41,7 +41,6 @@ public class SprintsControllerTest {
     private Project project1;
     private Project project2;
     private Sprint project1Sprint;
-    private Sprint project2Sprint;
 
     @BeforeEach
     public void setup() throws ProjectNotFoundException {
@@ -51,7 +50,7 @@ public class SprintsControllerTest {
         project2 = ProjectGenerator.createProject();
 
         project1Sprint = SprintGenerator.createSprint();
-        project2Sprint = SprintGenerator.createSprint();
+        Sprint project2Sprint = SprintGenerator.createSprint();
 
         projectsRepository.create(project1);
         projectsRepository.create(project2);

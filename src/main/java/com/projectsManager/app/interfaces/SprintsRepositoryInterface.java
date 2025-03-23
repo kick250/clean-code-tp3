@@ -5,5 +5,7 @@ import com.projectsManager.app.exceptions.SprintNotFoundException;
 
 public interface SprintsRepositoryInterface {
 
-    public void update(Sprint sprint) throws SprintNotFoundException;
+    void update(Sprint sprint) throws SprintNotFoundException;
+
+    Sprint getById(Long id) throws SprintNotFoundException;
 }

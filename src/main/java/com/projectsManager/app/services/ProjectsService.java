@@ -2,7 +2,6 @@ package com.projectsManager.app.services;
 
 import com.projectsManager.app.domain.Project;
 import com.projectsManager.app.exceptions.ProjectNotFoundException;
-import com.projectsManager.app.exceptions.SprintNotFoundException;
 import com.projectsManager.app.interfaces.ProjectsRepositoryInterface;
 import com.projectsManager.app.interfaces.ProjectsServiceInterface;
 import com.projectsManager.app.repositories.ProjectsRepository;

@@ -7,6 +7,7 @@ import org.instancio.Instancio;
 import org.instancio.Select;
 
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 
 public class SprintGenerator {
     public static Sprint createSprint() {
@@ -15,6 +16,7 @@ public class SprintGenerator {
                 .set(Select.field("startDate"), Faker.instance().date().birthday().toInstant().atOffset(ZoneOffset.of(TimeConfig.OFFSET_ID)).toLocalDate())
                 .set(Select.field("endDate"), Faker.instance().date().birthday().toInstant().atOffset(ZoneOffset.of(TimeConfig.OFFSET_ID)).toLocalDate())
                 .set(Select.field("project"), null)
+                .set(Select.field("tasks"), new ArrayList<>())
                 .set(Select.field("markedForDelete"), false)
                 .create();
     }

@@ -14,6 +14,7 @@ import com.projectsManager.app.responses.SprintResponse;
 import com.projectsManager.app.responses.SprintsResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,6 +41,7 @@ public class SprintsController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity create(@PathVariable("projectId") Long projectId, @Valid @RequestBody CreateSprintRequest request) {
         try {
             Project project = projectsService.getById(projectId);
@@ -56,6 +58,7 @@ public class SprintsController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity update(@PathVariable("projectId") Long projectId, @PathVariable("id") Long id, @Valid @RequestBody UpdateSprintRequest request) {
         try {
             Project project = projectsService.getById(projectId);
@@ -71,6 +74,7 @@ public class SprintsController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity deleteById(@PathVariable("projectId") Long projectId, @PathVariable("id") Long id) {
         try {
             Project project = projectsService.getById(projectId);

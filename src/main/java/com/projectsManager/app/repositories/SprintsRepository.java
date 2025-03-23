@@ -21,20 +21,34 @@ import java.util.List;
 public class SprintsRepository implements SprintsRepositoryInterface {
     private final JdbcTemplate jdbcTemplate;
     private final SprintFactory sprintFactory;
+    private final TasksRepository tasksRepository;
 
-    public SprintsRepository(JdbcTemplate jdbcTemplate, SprintFactory sprintFactory) {
+    public SprintsRepository(JdbcTemplate jdbcTemplate, SprintFactory sprintFactory, TasksRepository tasksRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.sprintFactory = sprintFactory;
+        this.tasksRepository  = tasksRepository;
     }
 
     public List<Sprint> getByProjectId(Long projectId) {
         try {
             String query = "SELECT id, start_date, end_date FROM sprints WHERE project_id = ?";
             return jdbcTemplate.query(query, (resultSet, rowNum) -> {
-                return sprintFactory.buildFromResultSet(resultSet);
+                Long id = resultSet.getLong("ID");
+                return sprintFactory.buildFromResultSet(resultSet, tasksRepository.getBySprintId(id));
             }, projectId);
         } catch (EmptyResultDataAccessException exception) {
             return new ArrayList<>();
+        }
+    }
+
+    public Sprint getById(Long id) throws SprintNotFoundException {
+        try {
+            String query = "SELECT id, start_date, end_date FROM sprints WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> {
+                return sprintFactory.buildFromResultSet(resultSet, tasksRepository.getBySprintId(id));
+            }, id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new SprintNotFoundException();
         }
     }
 
@@ -74,14 +88,31 @@ public class SprintsRepository implements SprintsRepositoryInterface {
         if (keyHolder.getKey() == null)  throw new SaveErrorException();
 
         sprint.setAsSaved(keyHolder.getKey().longValue());
+
+        tasksRepository.saveCollection(sprint.listTasks());
     }
 
     public void update(Sprint sprint) throws SprintNotFoundException {
         if (!existsById(sprint.getId())) throw new SprintNotFoundException();
 
+        if (sprint.hasProject())
+            updateWithProject(sprint);
+        else
+            updateWithoutProject(sprint);
+
+        tasksRepository.saveCollection(sprint.listTasks());
+    }
+
+    private void updateWithProject(Sprint sprint) {
         String sql = "UPDATE sprints SET start_date = ?, end_date = ?, project_id = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, sprint.getStartDate(), sprint.getEndDate(), sprint.getProjectId(), sprint.getId());
+    }
+
+    private void updateWithoutProject(Sprint sprint) {
+        String sql = "UPDATE sprints SET start_date = ?, end_date = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, sprint.getStartDate(), sprint.getEndDate(), sprint.getId());
     }
 
     public void tryDelete(Sprint sprint) {
@@ -100,6 +131,8 @@ public class SprintsRepository implements SprintsRepositoryInterface {
     }
 
     public void deleteAll() {
+        tasksRepository.deleteAll();
+
         String sql = "DELETE FROM sprints";
 
         jdbcTemplate.update(sql);
