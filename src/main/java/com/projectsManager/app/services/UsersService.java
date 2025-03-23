@@ -18,4 +18,14 @@ public class UsersService implements UsersServiceInterface {
     public User getById(Long id) throws UserNotFoundException {
         return usersRepository.getById(id);
     }
+
+    @Override
+    public void create(User user) {
+        usersRepository.create(user);
+    }
+
+    @Override
+    public void update(User user) throws UserNotFoundException {
+        usersRepository.update(user);
+    }
 }

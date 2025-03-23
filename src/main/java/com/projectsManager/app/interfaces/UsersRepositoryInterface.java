@@ -5,4 +5,12 @@ import com.projectsManager.app.exceptions.UserNotFoundException;
 
 public interface UsersRepositoryInterface {
     User getById(Long id) throws UserNotFoundException;
+
+    void deleteAll();
+
+    void create(User user);
+
+    int count();
+
+    void update(User user) throws UserNotFoundException;
 }

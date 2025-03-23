@@ -5,7 +5,7 @@ import com.projectsManager.app.exceptions.TaskNotFoundException;
 
 public interface TasksRepositoryInterface {
 
-    public Task getById(Long id) throws TaskNotFoundException;
+    Task getById(Long id) throws TaskNotFoundException;
 
     void update(Task task) throws TaskNotFoundException;
 }

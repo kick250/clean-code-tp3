@@ -52,4 +52,41 @@ public class UsersRepository implements UsersRepositoryInterface {
 
         user.setAsSaved(keyHolder.getKey().longValue());
     }
+
+    @Override
+    public void update(User user) throws UserNotFoundException {
+        if (!existsById(user.getId())) throw new UserNotFoundException();
+
+        String sql = "UPDATE users SET name = ?, email = ?, position = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPosition().toString(), user.getId());
+    }
+
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM users";
+
+        jdbcTemplate.update(sql);
+    }
+
+    private boolean existsById(Long id) {
+        if (id == null) return false;
+
+        String query = "SELECT COUNT(*) FROM users WHERE id = ?";
+
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class, id);
+
+        return count != null && count > 0;
+    }
+
+    @Override
+    public int count() {
+        String query = "SELECT COUNT(*) FROM users";
+
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class);
+
+        if (count == null) return 0;
+
+        return count;
+    }
 }
