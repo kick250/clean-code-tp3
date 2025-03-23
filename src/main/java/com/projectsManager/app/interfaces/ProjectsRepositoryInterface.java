@@ -2,6 +2,7 @@ package com.projectsManager.app.interfaces;
 
 import com.projectsManager.app.domain.Project;
 import com.projectsManager.app.exceptions.ProjectNotFoundException;
+import com.projectsManager.app.exceptions.SprintNotFoundException;
 
 import java.util.List;
 

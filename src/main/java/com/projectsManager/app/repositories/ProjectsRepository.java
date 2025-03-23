@@ -20,10 +20,12 @@ import java.util.List;
 public class ProjectsRepository implements ProjectsRepositoryInterface {
     private final JdbcTemplate jdbcTemplate;
     private final ProjectFactory projectFactory;
+    private final SprintsRepository sprintsRepository;
 
-    public ProjectsRepository(JdbcTemplate jdbcTemplate, ProjectFactory projectFactory) {
+    public ProjectsRepository(JdbcTemplate jdbcTemplate, ProjectFactory projectFactory, SprintsRepository sprintsRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.projectFactory = projectFactory;
+        this.sprintsRepository = sprintsRepository;
     }
 
     @Override
@@ -31,7 +33,8 @@ public class ProjectsRepository implements ProjectsRepositoryInterface {
         try {
             String query = "SELECT id, name, description FROM projects";
             return jdbcTemplate.query(query, (resultSet, rowNum) -> {
-                return projectFactory.buildFromResultSet(resultSet);
+                Long id = resultSet.getLong("ID");
+                return projectFactory.buildFromResultSet(resultSet, sprintsRepository.getByProjectId(id));
             });
         } catch (EmptyResultDataAccessException exception) {
             return new ArrayList<>();
@@ -43,7 +46,7 @@ public class ProjectsRepository implements ProjectsRepositoryInterface {
         try {
             String query = "SELECT id, name, description FROM projects where id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> {
-                return projectFactory.buildFromResultSet(resultSet);
+                return projectFactory.buildFromResultSet(resultSet, sprintsRepository.getByProjectId(id));
             }, id);
         } catch (EmptyResultDataAccessException exception) {
             throw new ProjectNotFoundException();
@@ -65,7 +68,7 @@ public class ProjectsRepository implements ProjectsRepositoryInterface {
 
         if (keyHolder.getKey() == null)  throw new SaveErrorException();
 
-        project.setAsSeved(keyHolder.getKey().longValue());
+        project.setAsSaved(keyHolder.getKey().longValue());
     }
 
     @Override
@@ -75,6 +78,8 @@ public class ProjectsRepository implements ProjectsRepositoryInterface {
         String sql = "UPDATE projects SET name = ?, description = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, project.getName(), project.getDescription(), project.getId());
+
+        sprintsRepository.saveCollection(project.listSprints());
     }
 
     @Override
@@ -88,6 +93,8 @@ public class ProjectsRepository implements ProjectsRepositoryInterface {
 
     @Override
     public void deleteAll() {
+        sprintsRepository.deleteAll();
+
         String sql = "DELETE FROM projects";
 
         jdbcTemplate.update(sql);
@@ -100,6 +107,6 @@ public class ProjectsRepository implements ProjectsRepositoryInterface {
 
         Integer count = jdbcTemplate.queryForObject(query, Integer.class, id);
 
-        return count != null &&  count > 0;
+        return count != null && count > 0;
     }
 }

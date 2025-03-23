@@ -11,6 +11,7 @@ import com.projectsManager.app.responses.ProjectsResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,6 +42,7 @@ public class ProjectsController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<DefaultResponse> create(@Valid @RequestBody CreateProjectRequest request) {
         Project project = new Project(request);
         projectsService.create(project);
@@ -48,6 +50,7 @@ public class ProjectsController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity<DefaultResponse> update(@PathVariable("id") Long id, @Valid @RequestBody UpdateProjectRequest request) {
         try {
             Project project = new Project(id, request);
@@ -59,6 +62,7 @@ public class ProjectsController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<DefaultResponse> deleteById(@PathVariable("id") Long id) {
         try {
             projectsService.deleteById(id);

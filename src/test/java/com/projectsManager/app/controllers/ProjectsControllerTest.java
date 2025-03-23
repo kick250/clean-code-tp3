@@ -1,7 +1,7 @@
 package com.projectsManager.app.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.projectsManager.app.DomainGenerator.ProjectGenerator;
+import com.projectsManager.app.domainGenerator.ProjectGenerator;
 import com.projectsManager.app.domain.Project;
 import com.projectsManager.app.exceptions.ProjectNotFoundException;
 import com.projectsManager.app.interfaces.ProjectsRepositoryInterface;

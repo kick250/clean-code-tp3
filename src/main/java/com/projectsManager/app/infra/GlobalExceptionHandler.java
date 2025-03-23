@@ -4,6 +4,7 @@ import com.projectsManager.app.responses.DefaultErrorResponse;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,15 +25,20 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
 
         exception.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
+            errors.put(error.getField(), error.getDefaultMessage())
         );
 
         return ResponseEntity.badRequest().body(errors);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<DefaultErrorResponse> Handler(Exception exception) {
+    public ResponseEntity<DefaultErrorResponse> unknownRouteHandler(Exception exception) {
         return ResponseEntity.status(404).body(new DefaultErrorResponse("Essa rota não existe."));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<DefaultErrorResponse> unknownMethodHandler(Exception exception) {
+        return ResponseEntity.status(404).body(new DefaultErrorResponse("Esse metodo não existe."));
     }
 
     @ExceptionHandler(Exception.class)
