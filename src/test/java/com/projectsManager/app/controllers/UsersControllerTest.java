@@ -47,7 +47,7 @@ public class UsersControllerTest {
 
         user = UserGenerator.createUser();
 
-        usersRepository.create(user);
+        user = usersRepository.create(user);
 
         uri = "/users";
     }

@@ -63,8 +63,8 @@ public class TasksControllerTest {
         user = UserGenerator.createUser();
         user2 = UserGenerator.createUser();
 
-        usersRepository.create(user);
-        usersRepository.create(user2);
+        user = usersRepository.create(user);
+        user2 = usersRepository.create(user2);
 
         sprint.addTask(task);
         task.setOwner(user);

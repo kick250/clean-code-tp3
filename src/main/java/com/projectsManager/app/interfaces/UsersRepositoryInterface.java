@@ -8,7 +8,7 @@ public interface UsersRepositoryInterface {
 
     void deleteAll();
 
-    void create(User user);
+    User create(User user);
 
     int count();
 

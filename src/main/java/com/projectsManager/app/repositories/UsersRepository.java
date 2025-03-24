@@ -35,7 +35,7 @@ public class UsersRepository implements UsersRepositoryInterface {
         }
     }
 
-    public void create(User user) {
+    public User create(User user) {
         String sql = "INSERT INTO users (name, email, position) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -50,7 +50,7 @@ public class UsersRepository implements UsersRepositoryInterface {
 
         if (keyHolder.getKey() == null)  throw new SaveErrorException();
 
-        user.setAsSaved(keyHolder.getKey().longValue());
+        return user.setAsSaved(keyHolder.getKey().longValue());
     }
 
     @Override

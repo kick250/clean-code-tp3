@@ -4,10 +4,10 @@ import com.projectsManager.app.enums.UserPosition;
 import com.projectsManager.app.requests.CreateUserRequest;
 
 public class User {
-    private Long id;
-    private String name;
-    private String email;
-    private UserPosition position;
+    private final Long id;
+    private final String name;
+    private final String email;
+    private final UserPosition position;
 
     public User(long id, String name, String email, UserPosition position) {
         this.id = id;
@@ -17,21 +17,22 @@ public class User {
     }
 
     public User(CreateUserRequest request) {
+        id = null;
         name = request.name();
         email = request.email();
         position = request.position();
     }
 
-    public void setAsSaved(long id) {
-        this.id = id;
+    public User setAsSaved(long id) {
+        return new User(id, name, email, position);
     }
 
-    public void updateEmail(String email) {
-        this.email = email;
+    public User updateEmail(String email) {
+        return new User(id, name, email, position);
     }
 
-    public void setPosition(UserPosition position) {
-        this.position = position;
+    public User setPosition(UserPosition position) {
+        return new User(id, name, email, position);
     }
 
     public Long getId() {

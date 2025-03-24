@@ -36,7 +36,7 @@ public class UsersController {
         try {
             User user = usersService.getById(id);
 
-            user.updateEmail(request.newEmail());
+            user = user.updateEmail(request.newEmail());
 
             usersService.update(user);
 
@@ -52,7 +52,7 @@ public class UsersController {
         try {
             User user = usersService.getById(id);
 
-            user.setPosition(request.newPosition());
+            user = user.setPosition(request.newPosition());
 
             usersService.update(user);
 
